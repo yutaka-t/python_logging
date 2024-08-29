@@ -5,11 +5,17 @@ import logging
 # -----------------------------------------------
 logger = logging.getLogger(__name__)
 
+# ルートロガーの設定
+logging.basicConfig(level=logging.DEBUG)
+
 # -----------------------------------------------
 # 2. ハンドラを設定
 # -----------------------------------------------
 stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.WARNING)  # ハンドラーのログレベルを設定
+
 file_handler = logging.FileHandler('file_handler_output_test.txt')
+file_handler.setLevel(logging.INFO)  # ハンドラーのログレベルを設定
 
 # フォーマットの定義
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

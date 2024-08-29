@@ -10,7 +10,12 @@
 ### 概要
 
 - 階層構造で表現する
-- 子ロガーのログが親ロガーへ伝播する(参考: 02.py)
+- 子ロガーのログが親(root)ロガーへ伝播する(参考: 02.py)
+  - 親がdebugレベル、子がerrorレベルの場合にinfoのログが出力された場合の例
+    1. 子はerrorなので、infoレベルは無視して出力しない
+    2. 次に親に伝播
+    3. 親は、debugレベルなので、infoレベルを出力する
+    4. 結果infoレベルのログが出力される(rootロガーによって出力される)
 - ロガーの名前は、__name__ の値を入れるのがベストプラクティス
     <pre>logger = logging.getLogger(__name__)</pre>
 
@@ -57,11 +62,17 @@ import logging
 # -----------------------------------------------
 logger = logging.getLogger(__name__)
 
+# ルートロガーの設定
+logging.basicConfig(level=logging.DEBUG)
+
 # -----------------------------------------------
 # 2. ハンドラを設定
 # -----------------------------------------------
 stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.WARNING)  # ハンドラーのログレベルを設定
+
 file_handler = logging.FileHandler('file_handler_output_test.txt')
+file_handler.setLevel(logging.INFO)  # ハンドラーのログレベルを設定
 
 # フォーマットの定義
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
